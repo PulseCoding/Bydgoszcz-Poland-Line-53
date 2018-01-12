@@ -899,16 +899,13 @@ var DoRead = function (){
             var dig7=hex2a(assignment(resp.register[74]).toString(16));
             Barcode=dig1+dig2+dig3+dig4+dig5+dig6+dig7;
           }
-          if((isNaN(Barcode) || Barcode == '0') && !flag){
+          if(isNaN(Barcode) || Barcode == '0' ){
             Barcode='0';
-          }else if(Barcode != '0' && !flag){
-            barcodeLast = Barcode;
-            flag = true;
           }
+          console.log(Barcode)
 	        if(secBarcode>=60){
               writedataBarcode(barcodeLast,"pol_byd_Barcode_l53.log");
               secBarcode=0;
-              flag = false;
           }
           secBarcode++;
           //Barcode -------------------------------------------------------------------------------------------------------------

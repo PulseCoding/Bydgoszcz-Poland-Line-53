@@ -902,7 +902,6 @@ var DoRead = function (){
           if(isNaN(Barcode) || Barcode == '0' ){
             Barcode='0';
           }
-          console.log(Barcode)
 	        if(secBarcode>=60){
               writedataBarcode(barcodeLast,"pol_byd_Barcode_l53.log");
               secBarcode=0;

@@ -887,7 +887,7 @@ var DoRead = function (){
             }
           //Paletizer -------------------------------------------------------------------------------------------------------------
           //Barcode -------------------------------------------------------------------------------------------------------------
-          if(resp.register[68]==0&&resp.register[69]==0&&resp.register[70]==0&&resp.register[71]==0&&resp.register[72]==0&&resp.register[73]==0&&resp.register[74]==0){
+          if(resp.register[68]==0&&resp.register[69]==0&&resp.register[70]==0&&resp.register[71]==0&&resp.register[72]==0&&resp.register[73]==0&&resp.register[74]==0&&resp.register[75]==0){
             Barcode='0';
           }else {
             var dig1=hex2a(assignment(resp.register[68]).toString(16));
@@ -897,8 +897,10 @@ var DoRead = function (){
             var dig5=hex2a(assignment(resp.register[72]).toString(16));
             var dig6=hex2a(assignment(resp.register[73]).toString(16));
             var dig7=hex2a(assignment(resp.register[74]).toString(16));
-            Barcode=dig1+dig2+dig3+dig4+dig5+dig6+dig7;
+            var dig8=hex2a(assignment(resp.register[75]).toString(16));
+            Barcode=dig1+dig2+dig3+dig4+dig5+dig6+dig7+dig8;
           }
+          console.log(Barcode,resp.register[68],resp.register[69],resp.register[70],resp.register[71],resp.register[72],resp.register[73],resp.register[74],resp.register[75]==0)
           if(isNaN(Barcode) || Barcode == '0' ){
             Barcode='0';
           }

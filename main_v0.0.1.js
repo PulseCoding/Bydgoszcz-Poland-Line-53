@@ -906,7 +906,7 @@ var DoRead = function (){
           }
           console.log(Barcode)
 	        if(secBarcode>=60){
-              writedataBarcode(barcodeLast,"pol_byd_Barcode_l53.log");
+              writedataBarcode(Barcode,"pol_byd_Barcode_l53.log");
               secBarcode=0;
           }
           secBarcode++;

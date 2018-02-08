@@ -900,11 +900,9 @@ var DoRead = function (){
             var dig8=hex2a(assignment(resp.register[75]).toString(16));
             Barcode=dig1+dig2+dig3+dig4+dig5+dig6+dig7+dig8;
           }
-          console.log(Barcode,resp.register[68],resp.register[69],resp.register[70],resp.register[71],resp.register[72],resp.register[73],resp.register[74],resp.register[75])
           if(isNaN(Barcode) || Barcode == '0' ){
             Barcode='0';
           }
-          console.log(Barcode)
 	        if(secBarcode>=60){
               writedataBarcode(Barcode,"pol_byd_Barcode_l53.log");
               secBarcode=0;

@@ -1,10 +1,10 @@
 // ----------------------------------------------------//
 // Se crean las instancias de las librerias a utilizar //
 // ----------------------------------------------------//
-try{
   var modbus = require('jsmodbus');
   var fs = require('fs');
-  var PubNub = require('pubnub');
+  var httpClient = require('node-rest-client').Client;
+  var clientHttp = new httpClient();
 //Asignar host, puerto y otros par ametros al cliente Modbus
 var client = modbus.client.tcp.complete({
     'host': "192.168.20.15",
@@ -39,7 +39,7 @@ var actualCheckweigher2=0,stateCheckweigher2=0;
 var Paletizer,ctPaletizer=0,speedTempPaletizer=0,secPaletizer=0,stopCountPaletizer=0,flagStopPaletizer=0,flagPrintPaletizer=0,speedPaletizer=0,timePaletizer=0;
 var actualPaletizer=0,statePaletizer=0;
 var Barcode,secBarcode=0;
-var secEOL=0,secPubNub=0;
+var secEOL=0,secPubNub=5*60;
 var publishConfig;
 var flag = false, barcodeLast = '0';
 var files = fs.readdirSync("/home/oee/Pulse/BYD_L53_LOGS/"); //Leer documentos
@@ -62,11 +62,6 @@ function idle(){
   }
 }
 
-pubnub = new PubNub({
-  publishKey : "pub-c-82cf38a9-061a-43e2-8a0f-21a6770ab473",
-  subscribeKey : "sub-c-e14aa146-bab0-11e8-b6ef-c2e67adadb66",
-  uuid : "bydgoszcz-L53-monitoring"
-});
 // --------------------------------------------------------- //
 //Función que realiza las instrucciones de lectura de datos  //
 // --------------------------------------------------------- //
@@ -934,22 +929,26 @@ var DoRead = function (){
             secPubNub=0;
             idle();
             publishConfig = {
-              channel : "BYD_Monitor",
-              message : {
-                    line: "53",
-                    tt: Date.now(),
-                    machines: text2send
-                  }
+              headers: { "Content-Type": "application/json" },
+              data: {              message : {
+                                  line: "53",
+                                  tt: Date.now(),
+                                  machines:text2send
+                                }}
             };
             senderData();
           }
           secPubNub++;
     });//END Client Read
 };
+clientHttp.registerMethod("postMethod", "http://35.160.68.187:23000/heartbeatLine/Byd", "POST");
 
 function senderData(){
-  pubnub.publish(publishConfig, function(status, response) {
-});}
+  clientHttp.methods.postMethod(publishConfig, function (data, response) {
+      // parsed response body as js object
+      console.log(data.toString());
+  });
+}
 
 function hex2a(hex){
    var str = '';
@@ -1045,6 +1044,7 @@ var shutdown = function () {
     ///Use function STOP and close connection
     stop();
     client.close();
+    process.exit(0);
 };
 
 process.on('SIGTERM', shutdown);
@@ -1069,7 +1069,3 @@ client.on('close', function () {
     fs.appendFileSync("error.log","ID 2: "+Date.now()+": "+'Client closed, stopping interval.'+"\n");
     stop();
 });
-
-}catch(err){
-    fs.appendFileSync("error.log","ID 3: "+Date.now()+": "+err+"\n");
-}
